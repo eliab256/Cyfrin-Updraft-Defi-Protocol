@@ -54,15 +54,21 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine__DscAddressCantBeZero();
     error DSCEngine__NotAllowedToken();
     error DSCEngine__CollateralDepositFailed(address collateralToken);
+    error DSCEngine__BreaksHealthFactor(uint256 userHealthFactor);
+    error DSCEngine__DscMintFailed();
 
     DecentralizedStableCoin public immutable i_dsc;
     uint256 public constant ADDITION_FEED_PRECISION = 1e10;
     uint256 public constant PRECISION = 1e18;
+    uint256 public constant LIQUIDATION_THRESHOLD = 50;
+    uint256 public constant LIQUIDATION_PRECISION = 100;
+    uint256 public constant MIN_HEALT_FACTOR = 1; 
+
     mapping(address token => address priceFeed) private s_priceFeeds;
     mapping(address user => mapping(address tokenCollateral => uint256 amount)) private s_collateralDeposited;
     mapping(address user => uint256 amountDscMinted) private s_DscMinted;
     address[] private s_collateralTokens;
-    uint256 public s_liquidationThreshold;
+    
 
     event CollateralDeposited(address indexed depositer, address indexed tokenCollateralAddress, uint256 indexed collateralAmount);
 
@@ -128,6 +134,10 @@ contract DSCEngine is ReentrancyGuard {
     function mintDsc(uint256 _amountDscToMint) external moreThanZero(_amountDscToMint) nonReentrant{
         s_DscMinted[msg.sender] += _amountDscToMint;
         _revertIfHealthFactorIsBroken(msg.sender);
+        bool minted = i_dsc.mint(msg.sender, _amountDscToMint);
+        if(!minted){
+            revert DSCEngine__DscMintFailed();
+        }
     }
 
     function burnDsc() external {}
@@ -145,11 +155,15 @@ contract DSCEngine is ReentrancyGuard {
 
     function _healthFactor(address user) private view returns (uint256) {
         (uint256 totalDscMinted, uint256 collateralValueInUsd) = _getAccountInformation(user);
-        return _calculateHealthFactor(totalDscMinted, collateralValueInUsd);
+        uint256 collateralAdjustedThreshold = (collateralValueInUsd * LIQUIDATION_THRESHOLD) / LIQUIDATION_PRECISION;
+        return ((collateralAdjustedThreshold * PRECISION) / totalDscMinted);
     }
 
     function _revertIfHealthFactorIsBroken(address _user) internal view {
-
+        uint256 userHealthFactor = _healthFactor(_user);
+        if (userHealthFactor <= MIN_HEALT_FACTOR){
+            revert DSCEngine__BreaksHealthFactor(userHealthFactor);
+        }
     }
 
     function getHealthFactor() external view {}
