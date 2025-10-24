@@ -158,7 +158,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amountDscToMint",
+						"type": "uint256"
+					}
+				],
 				"name": "mintDsc",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -278,11 +284,11 @@
 			]
 		},
 		"src/DSCEngine.sol": {
-			"keccak256": "0xd5c214e6fe1be15d0d3d4ebbc8dcae8852533118ca5dfe13a757a7f4ba62de8c",
+			"keccak256": "0xb23d8b55c1a40661dacd15014d2478b9ac11a2f4a6ba78fa56fd24d942760582",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://86928505d2ed0f4e2537b2ec35f4e850798d514e449006c46d9f782930deccd6",
-				"dweb:/ipfs/QmSuLQndW8JePjoGysov5A64Dkoc856PXSg5SBVKJyp12H"
+				"bzz-raw://6469354b882017a88a72886ca51f33c943b22456185b8e2a426a6a8d2ac65bad",
+				"dweb:/ipfs/QmQR2jKe21U6S1o5NuaBekAJM8xZEQ6qWNDAVSVh48fYJ9"
 			]
 		},
 		"src/DecentralizedStableCoin.sol": {

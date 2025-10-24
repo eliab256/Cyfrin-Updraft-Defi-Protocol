@@ -26,6 +26,7 @@ pragma solidity ^0.8.13;
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { DecentralizedStableCoin } from "./DecentralizedStableCoin.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interface/AggregatorV3Interfsce.sol";
 
 /*
  * @title DSCEngine
@@ -55,8 +56,13 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine__CollateralDepositFailed(address collateralToken);
 
     DecentralizedStableCoin public immutable i_dsc;
-    mapping(address => address) private s_priceFeeds;
-    mapping(address => mapping(address => uint256)) private s_collateralDeposited;
+    uint256 public constant ADDITION_FEED_PRECISION = 1e10;
+    uint256 public constant PRECISION = 1e18;
+    mapping(address token => address priceFeed) private s_priceFeeds;
+    mapping(address user => mapping(address tokenCollateral => uint256 amount)) private s_collateralDeposited;
+    mapping(address user => uint256 amountDscMinted) private s_DscMinted;
+    address[] private s_collateralTokens;
+    uint256 public s_liquidationThreshold;
 
     event CollateralDeposited(address indexed depositer, address indexed tokenCollateralAddress, uint256 indexed collateralAmount);
 
@@ -87,6 +93,7 @@ contract DSCEngine is ReentrancyGuard {
         }
         for (uint256 i = 0; i < _tokenCollateral.length; i++) {
             s_priceFeeds[_tokenCollateral[i]] = _priceFeed[i];
+            s_collateralTokens.push(_tokenCollateral[i]);
         }
         i_dsc = DecentralizedStableCoin(_dscAddress);
     }
@@ -114,11 +121,51 @@ contract DSCEngine is ReentrancyGuard {
 
     function redeemCollateralc() external {}
 
-    function mintDsc() external {}
+    /*
+     * @param amountDscToMint: The amount of DSC you want to mint
+     * You can only mint DSC if you have enough collateral
+     */
+    function mintDsc(uint256 _amountDscToMint) external moreThanZero(_amountDscToMint) nonReentrant{
+        s_DscMinted[msg.sender] += _amountDscToMint;
+        _revertIfHealthFactorIsBroken(msg.sender);
+    }
 
     function burnDsc() external {}
 
     function liquidate() external {}
 
+    function _getAccountInformation(address user)
+        private
+        view
+        returns (uint256 totalDscMinted, uint256 collateralValueInUsd)
+    {
+        totalDscMinted = s_DscMinted[user];
+        collateralValueInUsd = getAccountCollateralValue(user);
+    }
+
+    function _healthFactor(address user) private view returns (uint256) {
+        (uint256 totalDscMinted, uint256 collateralValueInUsd) = _getAccountInformation(user);
+        return _calculateHealthFactor(totalDscMinted, collateralValueInUsd);
+    }
+
+    function _revertIfHealthFactorIsBroken(address _user) internal view {
+
+    }
+
     function getHealthFactor() external view {}
+
+    function getAccountCollateralValue(address _user) public view returns(uint256 totalCollateralValueInUsd){
+        for(uint256 i= 0; i> s_collateralTokens.length; i++){
+            address token = s_collateralTokens[i];
+            uint256 amount = s_collateralDeposited[_user][token];
+            totalCollateralValueInUsd += getUSDValue(token, amount);
+        }
+        return totalCollateralValueInUsd;
+    }
+
+    function getUSDValue(address _token, uint256 _amount) public view isAllowedCollateral(_token) returns(uint256){
+        (bool success, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).latestRoundData();
+        //could implement that if !success use another oracle
+        return (uint256(price) * ADDITION_FEED_PRECISION * _amount) / PRECISION;
+    }
 }
