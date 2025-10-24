@@ -11,6 +11,21 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [],
+				"name": "DecentralizedStableCoin__AmountMustBeMoreThanZero",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "DecentralizedStableCoin__BurnAmountExceedsBalance",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "DecentralizedStableCoin__NotZeroAddress",
+				"type": "error"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -299,6 +314,30 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "mint",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "name",
 				"outputs": [
@@ -549,7 +588,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"src/DecentralizedStableCoin.sol": "DecentralizedStablecoin"
+			"src/DecentralizedStableCoin.sol": "DecentralizedStableCoin"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -620,11 +659,11 @@
 			]
 		},
 		"src/DecentralizedStableCoin.sol": {
-			"keccak256": "0xdcb2901d7b4bfa26bc0c38859dc5f49c8877d1bd3266bf6d76caeb9c188bd6c1",
+			"keccak256": "0x8fcffa36e063b047e4eb6ae50166eae771da5c0d15914a896eefcd0c9527e7fb",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://a51d95c925fbe044ab97a757c753788d157a1e2d74280ad95f914d2c50f368de",
-				"dweb:/ipfs/QmbBfUPFmhjnYuUmufFAzdJS8WVbqDsfSkRuawW5hS5ta2"
+				"bzz-raw://69c2feae4fa64cb4fef4b2693a5f2976b5e7d253c6608e123889c157ab7b831b",
+				"dweb:/ipfs/Qmf2i5fi7pSthkgsavLuDZQaJfSxgNQ7BMze1bWPa1p2jd"
 			]
 		}
 	},

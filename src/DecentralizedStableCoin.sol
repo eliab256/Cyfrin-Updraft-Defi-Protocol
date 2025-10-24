@@ -4,27 +4,6 @@ pragma solidity ^0.8.13;
 import {ERC20, ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-// Layout of Contract:
-// version
-// imports
-// interfaces, libraries, contracts
-// errors
-// Type declarations
-// State variables
-// Events
-// Modifiers
-// Functions
-
-// Layout of Functions:
-// constructor
-// receive function (if exists)
-// fallback function (if exists)
-// external
-// public
-// internal
-// private
-// view & pure functions
-
 
     /*
     * @title DecentralizedStableCoin
@@ -35,13 +14,13 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
     * Collateral Type: Crypto
     * This is the contract meant to be owned by DSCEngine. It is an ERC20 token that can be minted and burned by the DSCEngine smart contract.
     */
-contract DecentralizedStablecoin is ERC20Burnable, Ownable{
+contract DecentralizedStableCoin is ERC20Burnable, Ownable{
     error DecentralizedStableCoin__AmountMustBeMoreThanZero();
     error DecentralizedStableCoin__BurnAmountExceedsBalance();
     error DecentralizedStableCoin__NotZeroAddress();
 
 
-    constructor() ERC20("DecentralizedStablecoin", "DSC")Ownable(msg.sender){}
+    constructor() ERC20("DecentralizedStableCoin", "DSC")Ownable(msg.sender){}
 
     function burn(uint256 _amount) public override onlyOwner {
         uint256 balance = balanceOf(msg.sender);
