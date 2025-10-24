@@ -26,7 +26,9 @@ pragma solidity ^0.8.13;
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { DecentralizedStableCoin } from "./DecentralizedStableCoin.sol";
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interface/AggregatorV3Interfsce.sol";
+//import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interface/AggregatorV3Interfsce.sol";
+import {AggregatorV3Interface} from "lib/localDependencies/AggregatorV3Interface.sol";
+
 
 /*
  * @title DSCEngine
@@ -178,7 +180,7 @@ contract DSCEngine is ReentrancyGuard {
     }
 
     function getUSDValue(address _token, uint256 _amount) public view isAllowedCollateral(_token) returns(uint256){
-        (bool success, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).latestRoundData();
+        (, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).latestRoundData();
         //could implement that if !success use another oracle
         return (uint256(price) * ADDITION_FEED_PRECISION * _amount) / PRECISION;
     }

@@ -29,6 +29,17 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "userHealthFactor",
+						"type": "uint256"
+					}
+				],
+				"name": "DSCEngine__BreaksHealthFactor",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "collateralToken",
 						"type": "address"
@@ -40,6 +51,11 @@
 			{
 				"inputs": [],
 				"name": "DSCEngine__DscAddressCantBeZero",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "DSCEngine__DscMintFailed",
 				"type": "error"
 			},
 			{
@@ -89,6 +105,71 @@
 			},
 			{
 				"inputs": [],
+				"name": "ADDITION_FEED_PRECISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "LIQUIDATION_PRECISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "LIQUIDATION_THRESHOLD",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "MIN_HEALT_FACTOR",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "PRECISION",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "burnDsc",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -131,9 +212,52 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "getAccountCollateralValue",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalCollateralValueInUsd",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "getHealthFactor",
 				"outputs": [],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "getUSDValue",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "view",
 				"type": "function"
 			},
@@ -283,12 +407,20 @@
 				"dweb:/ipfs/QmZiKwtKU1SBX4RGfQtY7PZfiapbbu6SZ9vizGQD9UHjRA"
 			]
 		},
+		"lib/localDependencies/AggregatorV3Interface.sol": {
+			"keccak256": "0x134de4a121de5d7bf96256a7e08fd2f9079487123ea140ac33409533640de01f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2389849c289b0d6f2e150ba6171982d0bf485a5f279e1f25a98524b9ff57a492",
+				"dweb:/ipfs/QmZYf4Y6PnkfTpYMjg4rGfUcdgjQ8AWJnkThwqpce5t2Jz"
+			]
+		},
 		"src/DSCEngine.sol": {
-			"keccak256": "0xb23d8b55c1a40661dacd15014d2478b9ac11a2f4a6ba78fa56fd24d942760582",
+			"keccak256": "0x9c3839f13b1935e7fdf4606484a40b88d026451dc6e47259dccb4afe6d490a1e",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://6469354b882017a88a72886ca51f33c943b22456185b8e2a426a6a8d2ac65bad",
-				"dweb:/ipfs/QmQR2jKe21U6S1o5NuaBekAJM8xZEQ6qWNDAVSVh48fYJ9"
+				"bzz-raw://6cd017906e0df5cd769e7f24b000a87987c02771c339a6c313b8564b820b49f1",
+				"dweb:/ipfs/QmPFq6YivTaJsNzHhAWoQJ8xUfg7WH5Ngh3W5cGJ3Qj37f"
 			]
 		},
 		"src/DecentralizedStableCoin.sol": {
