@@ -1,0 +1,124 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "burnDsc",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenCollateralAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_collateralAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "depositCollateral",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenCollateralAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_collateralAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "depositCollateralAndMintDsc",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getHealthFactor",
+				"outputs": [],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "mintDsc",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "redeemCollateral",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "redeemCollateralForDsc",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/IDSCEngine.sol": "IDSCEngine"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"src/IDSCEngine.sol": {
+			"keccak256": "0x4689a231bb04e6de0776fe170593afb0d32bf86f57e227bdbff284ccc961389b",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://737691fe178ede60841f0ad8a01a0a675fd91ef6a30f7cce1409ff6ce374161a",
+				"dweb:/ipfs/Qmau5PhVe7CyNrk5pAkyLskNJjf3MM4NW8ZjMmfnwkHKsM"
+			]
+		}
+	},
+	"version": 1
+}
