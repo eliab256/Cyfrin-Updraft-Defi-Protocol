@@ -31,6 +31,30 @@ contract DSCEngineTest is Test {
         ERC20Mock(weth).mint(USER, AMOUNT_TO_MINT);
     }
 
+    //Constructor tests
+    function testRevertsIfTokenLegthDoesNotMatchPriceFeedLength() public {
+        address[] memory tokenAddresses = new address[](1);
+        address[] memory priceFeedAddresses = new address[](2);
+        vm.expectRevert(DSCEngine.DSCEngine__TokenAddressesAndPriceFeedAddressesMustBeSameLength.selector);
+        new DSCEngine(address(dsc), tokenAddresses, priceFeedAddresses);
+    }
+
+    function testRevertsIfDscAddressIsZero() public {
+        address[] memory tokenAddresses = new address[](1);
+        address[] memory priceFeedAddresses = new address[](1);
+        vm.expectRevert(DSCEngine.DSCEngine__DscAddressCantBeZero.selector);
+        new DSCEngine(address(0), tokenAddresses, priceFeedAddresses);
+    }
+
+    function testConstructorSetsAddressesCorrectly() public {
+        address[] memory collateraltokens = dsce.getCollateralTokens();
+        assertEq(address(dsc), address(dsce.i_dsc()));
+        assertEq(weth, collateraltokens[0]);
+        assertEq(wbtc, collateraltokens[1]);
+        assertEq(ethUsdPriceFeed, dsce.s_priceFeeds(weth));
+        assertEq(btcUsdPriceFeed, dsce.s_priceFeeds(wbtc));
+    }
+
     //PriceFeed tests
     function testGetUsdValue() public {
         uint256 ethAmount = 15e18;

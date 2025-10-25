@@ -71,7 +71,7 @@ contract DSCEngine is ReentrancyGuard {
     uint256 public constant LIQUIDATION_BONUS = 10;  //means 10%
     uint256 public constant MIN_HEALT_FACTOR = 1e18; 
     /// @dev Mapping of token address to price feed address
-    mapping(address token => address priceFeed) private s_priceFeeds;
+    mapping(address token => address priceFeed) public s_priceFeeds;
     /// @dev Amount of collateral deposited by user
     mapping(address user => mapping(address tokenCollateral => uint256 amount)) private s_collateralDeposited;
     /// @dev Amount of DSC minted by user
@@ -246,5 +246,9 @@ contract DSCEngine is ReentrancyGuard {
         (, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).latestRoundData();
         //could implement that if !success use another oracle
         return (uint256(price) * ADDITION_FEED_PRECISION * _amount) / PRECISION;
+    }
+
+    function getCollateralTokens() external view returns(address[] memory){
+        return s_collateralTokens;
     }
 }
