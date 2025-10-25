@@ -26,7 +26,6 @@ contract DSCEngineTest is Test {
         deployer = new DeployDSC();
         (dsc, dsce, config) = deployer.run();
         (weth, wbtc, ethUsdPriceFeed, btcUsdPriceFeed, ) = config.activeNetworkConfig();
-        console.log("Deployed dsce", address(dsce));
 
         ERC20Mock(weth).mint(USER, AMOUNT_TO_MINT);
     }
@@ -63,6 +62,13 @@ contract DSCEngineTest is Test {
         assertEq(expectedUsd, actualUsd);
     }
 
+    function testGetTokenAmountFromUsd() public {
+        uint256 usdAmount = 3000e18;
+        uint256 expectedWeth = 1.5e18; //3000/2000
+        uint256 actualWeth = dsce.getTokenAmountFromUsd(weth, usdAmount);
+        assertEq(expectedWeth, actualWeth);
+    }
+
     //depositCollateralTest
     function testDepositFunctionWorksOrRevertsIfDepositZero() public {
         vm.prank(USER);
@@ -71,6 +77,28 @@ contract DSCEngineTest is Test {
         vm.prank(USER);
         vm.expectRevert(DSCEngine.DSCEngine__NeedsMoreThanZero.selector);
         dsce.depositCollateral(address(weth), 0);
+    }
 
+    function testRevertsIfCollateralTokenNotApproved() public {
+        ERC20Mock ranToken = new ERC20Mock("RAN", "RAN", USER, AMOUNT_COLLATERAL);
+        vm.prank(USER);
+        vm.expectRevert(DSCEngine.DSCEngine__NotAllowedToken.selector);
+        dsce.depositCollateral(address(ranToken), AMOUNT_COLLATERAL);
+    }
+
+    modifier depositedCollateral() {
+        vm.startPrank(USER);
+        
+        ERC20Mock(weth).approve(address(dsce), AMOUNT_COLLATERAL);
+        dsce.depositCollateral(address(weth), AMOUNT_COLLATERAL);
+        vm.stopPrank();
+        _;
+    }
+
+    function testCanDepositCollateralAndGetAccounInfo() public depositedCollateral {
+        (uint256 totalDscMinted, uint256 collateralValueInUsd) = dsce.getAccountInformation(USER);
+        uint256 expectedDepositAmount = dsce.getTokenAmountFromUsd(weth, collateralValueInUsd);
+        assertEq(totalDscMinted, 0);
+        assertEq(expectedDepositAmount, AMOUNT_COLLATERAL);
     }
 }
