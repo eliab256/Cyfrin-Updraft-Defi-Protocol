@@ -15,7 +15,7 @@ abstract contract CodeConstants {
 
     uint8 public constant DECIMALS = 8;
     int256 public constant ETH_USD_PRICE = 2000e8; // 2000
-    int256 public constant BTC_USD_PRICE = 1000e8; // 1000
+    int256 public constant BTC_USD_PRICE = 3000e8; // 3000
 
 }
 

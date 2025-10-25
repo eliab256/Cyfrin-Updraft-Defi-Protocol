@@ -148,6 +148,7 @@ contract DSCEngine is ReentrancyGuard {
 
     function mintDsc(uint256 _amountDscToMint) public moreThanZero(_amountDscToMint) nonReentrant{
         s_DscMinted[msg.sender] += _amountDscToMint;
+        //@audit-issue Doesn't revert, some math problem inside
         _revertIfHealthFactorIsBroken(msg.sender);
         bool minted = i_dsc.mint(msg.sender, _amountDscToMint);
         if(!minted){
@@ -197,8 +198,15 @@ contract DSCEngine is ReentrancyGuard {
 
     function _healthFactor(address user) private view returns (uint256) {
         (uint256 totalDscMinted, uint256 collateralValueInUsd) = _getAccountInformation(user);
-        uint256 collateralAdjustedThreshold = (collateralValueInUsd * LIQUIDATION_THRESHOLD) / LIQUIDATION_PRECISION;
-        return ((collateralAdjustedThreshold * PRECISION) / totalDscMinted);
+        //se tutti e due sono zero ritorna 0
+        if (totalDscMinted == 0 && collateralValueInUsd == 0) {
+            return 0;
+        }else if( totalDscMinted == 0 && collateralValueInUsd > 0){
+            return type(uint256).max;
+        } else {
+            uint256 collateralAdjustedThreshold = (collateralValueInUsd * LIQUIDATION_THRESHOLD) / LIQUIDATION_PRECISION;
+            return ((collateralAdjustedThreshold * PRECISION) / totalDscMinted);
+        }
     }
 
     function _revertIfHealthFactorIsBroken(address _user) internal view {
