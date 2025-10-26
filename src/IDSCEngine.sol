@@ -1,9 +1,8 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
 
 interface IDSCEngine {
-
-  // ----------- Errors -----------
+    // ----------- Errors -----------
     error DSCEngine__NeedsMoreThanZero();
     error DSCEngine__TokenAddressesAndPriceFeedAddressesMustBeSameLength();
     error DSCEngine__DscAddressCantBeZero();
@@ -30,6 +29,8 @@ interface IDSCEngine {
         uint256 collateralAmount
     );
 
+    // ----------- External Function -----------
+
     /*
      * @param tokenCollateralAddress: The ERC20 token address of the collateral you're depositing
      * @param amountCollateral: The amount of collateral you're depositing
@@ -50,18 +51,17 @@ interface IDSCEngine {
      * @param amountDscToBurn: The amount of DSC you want to burn
      * @notice This function will withdraw your collateral and burn DSC in one transaction
      */
-    function redeemCollateralForDsc() external ;
-
+    function redeemCollateralForDsc() external;
 
     /*
      * @param tokenCollateralAddress: The ERC20 token address of the collateral you're redeeming
      * @param amountCollateral: The amount of collateral you're redeeming
      * @notice This function will redeem your collateral.
      * @notice If you have DSC minted, you will not be able to redeem until you burn your DSC
-     */ 
+     */
     function redeemCollateral() external;
 
-     /*
+    /*
      * @param amountDscToMint: The amount of DSC you want to mint
      * You can only mint DSC if you have enough collateral
      */
@@ -91,11 +91,53 @@ interface IDSCEngine {
      */
     function liquidate() external;
 
-    function getHealthFactor() external view;
-
+    // ----------- View Functions -----------
     function getTokenAmountFromUsd(address _token, uint256 usdAmountInWei) external view returns(uint256);
-
+    
     function getAccountCollateralValue(address _user) external view returns(uint256 totalCollateralValueInUsd);
-
+    
+    function calculateHealthFactor(uint256 _totalDscMinted, uint256 _collateralValueInUsd) external pure returns(uint256);
+    
     function getUSDValue(address _token, uint256 _amount) external view returns(uint256);
+    
+    function getAccountInformation(address user) external view returns (uint256 totalDscMinted, uint256 collateralValueInUsd);
+    
+    function getCollateralBalanceOfUser(address _user, address _tokenCollateral) external view returns (uint256);
+    
+    function getPrecision() external pure returns (uint256);
+    
+    function getAdditionalFeedPrecision() external pure returns (uint256);
+    
+    function getLiquidationThreshold() external pure returns (uint256);
+    
+    function getLiquidationBonus() external pure returns (uint256);
+    
+    function getLiquidationPrecision() external pure returns (uint256);
+    
+    function getMinHealthFactor() external pure returns (uint256);
+    
+    function getCollateralTokens() external view returns (address[] memory);
+    
+    function getDsc() external view returns (address);
+    
+    function getCollateralTokenPriceFeed(address token) external view returns (address);
+    
+    function getHealthFactor(address user) external view returns (uint256);
+
+    // ----------- Public State Variables (automatically generate getters) ----------- 
+    function i_dsc() external view returns (address);
+    
+    function s_priceFeeds(address token) external view returns (address priceFeed);
+    
+    function ADDITIONAL_FEED_PRECISION() external pure returns (uint256);
+    
+    function PRECISION() external pure returns (uint256);
+    
+    function LIQUIDATION_THRESHOLD() external pure returns (uint256);
+    
+    function LIQUIDATION_PRECISION() external pure returns (uint256);
+    
+    function LIQUIDATION_BONUS() external pure returns (uint256);
+    
+    function MIN_HEALTH_FACTOR() external pure returns (uint256);
 }
