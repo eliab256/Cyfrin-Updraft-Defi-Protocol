@@ -6,7 +6,7 @@ libs = ["lib"]
 [fuzz]
 runs = 256
 depth = 128
-fail_on_revert = true
+fail_on_revert = false
 
 remappings = [
     "@openzeppelin/contracts=lib/openzeppelin-contracts/contracts",

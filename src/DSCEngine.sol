@@ -29,6 +29,7 @@ import { DecentralizedStableCoin } from "./DecentralizedStableCoin.sol";
 //import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interface/AggregatorV3Interfsce.sol";
 import {AggregatorV3Interface} from "lib/localDependencies/AggregatorV3Interface.sol";
 import {console} from "forge-std/console.sol";
+import {OracleLib} from "./libraries/OracleLib.sol";
 
 
 /*
@@ -63,6 +64,8 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine__DscBurnFailed();
     error DSCEngine__HealthFactorOk();
     error DSCEngine__HealthFactorNotImproved();
+
+    using OracleLib for AggregatorV3Interface;
 
     DecentralizedStableCoin public immutable i_dsc;
     uint256 public constant ADDITIONAL_FEED_PRECISION = 1e10;
@@ -257,7 +260,7 @@ contract DSCEngine is ReentrancyGuard {
 // Public and external view Functions//
 ///////////////////////////////////////
     function getTokenAmountFromUsd(address _token, uint256 usdAmountInWei) public view returns(uint256){
-        (, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).latestRoundData();
+        (, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).stealCheckLatestRoundData();
         return (usdAmountInWei * PRECISION) / (uint256(price) * ADDITIONAL_FEED_PRECISION);
     }
 
@@ -276,7 +279,7 @@ contract DSCEngine is ReentrancyGuard {
 
 
     function getUSDValue(address _token, uint256 _amount) public view isAllowedCollateral(_token) returns(uint256){
-        (, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).latestRoundData();
+        (, int256 price, , ,) = AggregatorV3Interface(s_priceFeeds[_token]).stealCheckLatestRoundData();
         //could implement that if !success use another oracle
         return (uint256(price) * ADDITIONAL_FEED_PRECISION * _amount) / PRECISION;
     }

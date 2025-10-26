@@ -59,4 +59,22 @@ contract Invartiants is StdInvariant, Test{
         assert(wethValue + wbtcValue >= totalSupply);
     }
 
+    function invariant_gettersShouldNotRevert() public view {
+        dsce.getPrecision();
+        dsce.getAdditionalFeedPrecision();
+        dsce.getLiquidationThreshold();
+        dsce.getLiquidationBonus();
+        dsce.getLiquidationPrecision();
+        dsce.getMinHealthFactor();
+        dsce.getCollateralTokens();
+        dsce.getDsc();
+
+        // // 2. test getters con argomenti
+        // dsce.getCollateralTokenPriceFeed(someToken);
+        // dsce.getAccountCollateralValue(someUser);
+        // dsce.getHealthFactor(someUser);
+        // dsce.getCollateralBalanceOfUser(someUser, someToken);
+        // dsce.getAccountInformation(someUser);
+        }
+
 }
