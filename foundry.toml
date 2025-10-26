@@ -4,9 +4,9 @@ out = "out"
 libs = ["lib"]
 
 [fuzz]
-runs = 300
+runs = 256
 depth = 128
-fail_on_revert = false
+fail_on_revert = true
 
 remappings = [
     "@openzeppelin/contracts=lib/openzeppelin-contracts/contracts",

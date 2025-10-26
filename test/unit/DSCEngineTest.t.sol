@@ -16,7 +16,7 @@ import { StdCheats } from "forge-std/StdCheats.sol";
 
 
 contract DSCEngineTest is Test {
-    event CollateralRedeemed(address indexed redeemFrom, address indexed redeemTo, address token, uint256 amount); // if
+    event CollateralRedeemed(address indexed redeemFrom, address indexed redeemTo, address indexed tokenCollateral, uint256 collateralAmount); // if
         // redeemFrom != redeemedTo, then it was liquidated
  
     DSCEngine public dsce;
@@ -116,7 +116,7 @@ contract DSCEngineTest is Test {
         vm.startPrank(user);
         ERC20Mock(address(mockCollateralToken)).approve(address(mockDsce), amountCollateral);
         // Act / Assert
-        vm.expectRevert(DSCEngine.DSCEngine__CollateralDepositFailed.selector, address(mockCollateralToken));
+        vm.expectRevert(abi.encodeWithSelector(DSCEngine.DSCEngine__CollateralDepositFailed.selector, address(mockCollateralToken)));
         mockDsce.depositCollateral(address(mockCollateralToken), amountCollateral);
         vm.stopPrank();
     }
@@ -293,7 +293,10 @@ contract DSCEngineTest is Test {
         ERC20Mock(address(mockDsc)).approve(address(mockDsce), amountCollateral);
         // Act / Assert
         mockDsce.depositCollateral(address(mockDsc), amountCollateral);
-        vm.expectRevert(DSCEngine.DSCEngine__CollateralRedeemFailed.selector, address(mockDsc));
+        vm.expectRevert(abi.encodeWithSelector(
+            DSCEngine.DSCEngine__CollateralRedeemFailed.selector,
+            address(mockDsc)
+        ));
         mockDsce.redeemCollateral(address(mockDsc), amountCollateral);
         vm.stopPrank();
     }

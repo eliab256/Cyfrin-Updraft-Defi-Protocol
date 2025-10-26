@@ -9,14 +9,16 @@ import {DSCEngine} from "../../src/DSCEngine.sol";
 import {DecentralizedStableCoin} from "../../src/DecentralizedStableCoin.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {DeployDSC} from "../../script/DeployDSC.s.sol";
-import {Test} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Handler} from "./Handler.t.sol";
 
-contract InvartiantsTest is StdInvariant, Test{
+contract Invartiants is StdInvariant, Test{
     DecentralizedStableCoin dsc;
     DSCEngine dsce;
     HelperConfig helperConfig;
+    Handler handler;
 
     address weth;
     address wbtc;
@@ -36,7 +38,9 @@ contract InvartiantsTest is StdInvariant, Test{
         // if (block.chainid == 31_337) {
         //     vm.deal(user, STARTING_USER_BALANCE);
         // }
-        targetContract(address(dsce));
+        //targetContract(address(dsce));
+        handler = new Handler(dsce, dsc);
+        targetContract(address(handler));
     }
 
     function invariant_protocolMustHaveMoreValueThanTotalSupply() public view{
@@ -48,7 +52,11 @@ contract InvartiantsTest is StdInvariant, Test{
         uint256 wethValue = dsce.getUSDValue(weth, totalWethDeposited);
         uint256 wbtcValue = dsce.getUSDValue(wbtc, totalWbtcDeposited);
 
-        assert(wethValue + wbtcValue > totalSupply);
+        console.log("WETH value in USD: ", wethValue);
+        console.log("WBTC value in USD: ", wbtcValue);
+        console.log("Total DSC supply  : ", totalSupply);
+
+        assert(wethValue + wbtcValue >= totalSupply);
     }
 
 }

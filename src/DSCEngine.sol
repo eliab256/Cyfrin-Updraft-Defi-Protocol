@@ -82,7 +82,7 @@ contract DSCEngine is ReentrancyGuard {
     
 
     event CollateralDeposited(address indexed depositer, address indexed tokenCollateral, uint256 indexed collateralAmount);
-    event CollateralRedeemed(address indexed redeemeFrom, address indexed redeemeTo, address indexed tokenCollateral, uint256 collateralAmount);
+    event CollateralRedeemed(address indexed redeemFrom, address indexed redeemTo, address indexed tokenCollateral, uint256 collateralAmount);
 
     modifier moreThanZero(uint256 amount) {
         if (amount == 0) {
