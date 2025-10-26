@@ -2,6 +2,34 @@
 pragma solidity ^0.8.13;
 
 interface IDSCEngine {
+
+  // ----------- Errors -----------
+    error DSCEngine__NeedsMoreThanZero();
+    error DSCEngine__TokenAddressesAndPriceFeedAddressesMustBeSameLength();
+    error DSCEngine__DscAddressCantBeZero();
+    error DSCEngine__NotAllowedToken();
+    error DSCEngine__CollateralDepositFailed(address collateralToken);
+    error DSCEngine__CollateralRedeemFailed(address tokenCollateral);
+    error DSCEngine__BreaksHealthFactor();
+    error DSCEngine__DscMintFailed();
+    error DSCEngine__DscBurnFailed();
+    error DSCEngine__HealthFactorOk();
+    error DSCEngine__HealthFactorNotImproved();
+
+    // ----------- Events -----------
+    event CollateralDeposited(
+        address indexed depositer,
+        address indexed tokenCollateral,
+        uint256 indexed collateralAmount
+    );
+
+    event CollateralRedeemed(
+        address indexed redeemFrom,
+        address indexed redeemTo,
+        address indexed tokenCollateral,
+        uint256 collateralAmount
+    );
+
     /*
      * @param tokenCollateralAddress: The ERC20 token address of the collateral you're depositing
      * @param amountCollateral: The amount of collateral you're depositing
